@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Clean the environment
+module purge
+
+# Set working directory to home directory
+cd "${HOME}"
+
+# Launch Mate Window Manager and Panel
+marco --no-composite --no-force-fullscreen --sm-disable &
+# mate-panel blocks, but does not work reliably when launched in the same subshell as marco
+mate-panel &
+
+#
+# Start Stata
+#
+
+# Load the required environment
+module load <%= context.auto_modules_StataSE %>
+
+# make sure that XFCE boots up before you do
+sleep 3
+
+# Launch stata
+# note that xstata-se doesn't block so we have to watch it
+xstata-se
+
+# Get the PID of the last xstata-mp process started that I own
+stata_pid=$( pgrep -u "$USER" 'xstata-se' | tail )
+# As long as the PID directory exists we wait
+while [[ -d "/proc/$stata_pid" ]]; do
+  sleep 1
+done
