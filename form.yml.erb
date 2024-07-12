@@ -1,0 +1,55 @@
+<%-
+    paths = []
+    paths << Pathname.new("/scratch/#{User.new.name}")
+
+    projects = User.new.groups.map(&:name).grep(/^hb-./)
+
+    paths.concat projects.map { |p| Pathname.new("/scratch/#{p}")  }
+-%>
+
+---
+cluster: "login1"
+
+form:
+  - node_type
+  - auto_modules_StataSE
+  - num_hours
+  - num_cores
+  - memory
+
+attributes:
+  auto_modules_StataSE:
+    label: Stata Version
+    help: |
+      Select one of the Stata versions from the list.
+    default: false
+  node_type:
+    label: Node Type
+    help: |
+      Select the type of node you would like to use. For information on the different options, please see 
+      [our wiki](https://wiki.hpc.rug.nl/habrok/introduction/cluster_description#compute_nodes)
+    widget: select
+    options:
+      - [ "Regular", "regular" ]
+      - [ "Himem", "himem" ]
+      - [ "GELIFES", "gelifes" ]
+
+  num_hours:
+    label: Number of hours
+    widget: 'number_field'
+    help: "Please give the maximum wall time in hours"
+    value: 2
+    min: 1
+    step: 1
+    max: 12
+
+  memory:
+    label: Memory
+    help: Amount of memory requested, in GB
+    widget: 'number_field'
+    value: 2
+    min: 1
+    step: 1
+
+  # StataSE is single core, so we hardcode this to 1
+  num_cores: 1

@@ -1,0 +1,36 @@
+<%-
+    cores = num_cores.to_i
+    
+    hours = num_hours.to_i
+    
+    if node_type == "regular" 
+        if hours <= 8
+            partition = 'regularshort'
+        elsif hours > 8 and hours <= 72
+            partition = 'regularmedium'
+        else
+            partition = 'regularlong'
+        end
+    elsif node_type == 'himem'
+        if hours <= 8
+            partition = 'himemshort'
+        elsif hours > 8 and hours <= 72
+            partition = 'himemmedium'
+        else
+            partition = 'himemlong'
+        end
+    end
+-%>
+---
+batch_connect:
+  template: "vnc"
+script:
+  queue_name: <%= partition %>
+  wall_time: "<%= hours * 3600 %>"
+  native:
+    # Hardcode the number of nodes to 1
+    - "-N 1"
+    - "--mem"
+    - "<%= memory.blank? ? 2000 : memory.to_i * 1000 %>"
+    - "-c"
+    - "<%= num_cores.blank? ? 1 : num_cores.to_i %>"
