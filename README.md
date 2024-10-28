@@ -1,3 +1,6 @@
+# Repository moved
+The repository for this project has moved to https://gitrepo.service.rug.nl/cit-hpc/habrok/hb-stata.
+
 # Batch Connect - OSC Stata
 
 ![GitHub Release](https://img.shields.io/github/release/osc/bc_osc_stata.svg)
